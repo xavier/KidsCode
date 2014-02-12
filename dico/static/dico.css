@@ -1,0 +1,34 @@
+body {
+  font-family: "Helvetica", sans-serif;
+}
+
+.formulaire {
+  border: 1px solid #ccc;
+  padding:10px;
+  margin: 10px;
+}
+
+.lettres {
+  margin: 20px 10px;
+}
+
+.lettres a {
+  border: 1px solid #ccc;
+  padding: 3px;
+}
+
+.lettres a:hover {
+  border-color: #333;
+  background-color: #ff0;
+}
+
+
+.mots th {
+  text-align: left;
+  padding: 5px 10px;
+  border-bottom: 2px solid #999;
+}
+
+.mots td {
+  padding: 5px 10px;
+}

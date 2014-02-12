@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dictionnaire</title>
+  <link rel="stylesheet" type="text/css" media="all" href="/static/dico.css">
+</head>
+
+<body>
+  <h1>Dictionnaire</h1>
+  <div class="formulaire">
+    <form action="/" method="get">
+      <input type="search" name="q" placeholder="Préfixe">
+      <input type="submit" value="Chercher">
+    </form>
+  </div>
+  <div class="lettres">
+    {% for lettre in lettres %}
+      <a href="/mots/{{ lettre }}">{{ lettre }}</a>
+    {% endfor %}
+  </div>
+  <div class="mots">
+    <table>
+      <thead>
+        <tr>
+          <th>Mot</th>
+          <th>Recherche Google</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for mot in mots %}
+        <tr class="">
+          <td>{{ mot }}</td>
+          <td><a href="http://google.com/search?q={{ mot }}">recherche</a></td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
