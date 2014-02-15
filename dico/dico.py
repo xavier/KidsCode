@@ -18,9 +18,10 @@ def home_page():
     mots = dico.mots_commencant_par(q)
     lettre = q[:1]
   else:
+    q = ''
     mots = []
     lettre = None
-  return render_template('dico.html', lettre=lettre, lettres=dico.lettres, mots=mots)
+  return render_template('dico.html', query=q, lettre=lettre, lettres=dico.lettres, mots=mots)
 
 @app.route("/mots/<prefixe>")
 def mots(prefixe):
