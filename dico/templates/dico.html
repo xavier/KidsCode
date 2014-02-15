@@ -5,18 +5,21 @@
   <title>Dictionnaire</title>
   <link rel="stylesheet" type="text/css" media="all" href="/static/dico.css">
 </head>
-
 <body>
   <h1>Dictionnaire</h1>
   <div class="formulaire">
     <form action="/" method="get">
-      <input type="search" name="q" placeholder="Préfixe">
+      <input type="search" name="q" value="{{ query }}" placeholder="Préfixe">
       <input type="submit" value="Chercher">
     </form>
   </div>
   <div class="lettres">
-    {% for lettre in lettres %}
-      <a href="/mots/{{ lettre }}">{{ lettre }}</a>
+    {% for l in lettres %}
+      {% if l == lettre %}
+        <a href="/mots/{{ l }}" class="selectionnee">{{ l }}</a>
+      {% else %}
+        <a href="/mots/{{ l }}">{{ l }}</a>
+      {% endif %}
     {% endfor %}
   </div>
   <div class="mots">

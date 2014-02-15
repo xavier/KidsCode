@@ -17,6 +17,11 @@ body {
   padding: 3px;
 }
 
+.lettres a.selectionnee {
+  border-color: #000;
+  background-color: #ff0;
+}
+
 .lettres a:hover {
   border-color: #333;
   background-color: #ff0;
