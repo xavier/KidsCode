@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block body %}
+
+  <div id="potence">
+    <img src="/static/pendu_{{ erreurs }}.png">
+  </div>
+
+  <div id="mot-cache">
+    {{ mot_cache }}
+  </div>
+
+  <div id="lettres-jouees">
+    {{ lettres_jouees }}
+  </div>
+
+  {% if gameover %}
+    <div id="gameover">
+      <p>Vous êtes pendu!</p>
+      <p>Le mot à deviner était: <b>{{ mot_a_deviner }}</b></p>
+      <p><a href="/">Nouvelle partie</a></p>
+    </div>
+  {% elif mot_cache == mot_secret %}
+    <div id="gagne">
+      <p>Bravo, vous avez gagné!</p>
+      <p><a href="/">Nouvelle partie</a></p>
+    </div>
+  {% else %}
+    <form action="/tour" method="post">
+      <input type="text" name="lettre" value="">
+      <input type="submit" value="Proposer une lettre" focus>
+    </form>
+  {% endif %}
+
+{% endblock %}

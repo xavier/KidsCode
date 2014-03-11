@@ -1,0 +1,15 @@
+body {
+
+}
+
+#potence img {
+  height: 200px;
+}
+
+#mot-cache {
+  font-size: 200%;
+}
+
+#lettres-joues {
+  font-size: 150%;
+}
