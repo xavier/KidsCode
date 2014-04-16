@@ -16,28 +16,25 @@
 
 import pygame
 from pygame.locals import *
-from sys import exit
-import random
 
 pygame.init()
 
-screen=pygame.display.set_mode((640,480), 0, 32)
+font  = pygame.font.SysFont("calibri", 40)
+
+screen = pygame.display.set_mode((640,480), 0, 32)
 pygame.display.set_caption("Pyng!")
 
 #Creating 2 bars, a ball and background.
 background = pygame.image.load('back.jpg')
 
-bar = pygame.Surface((10,50))
-
-bar1 = bar.convert()
+bar1 = pygame.Surface((10,50))
 bar1.fill((0,0,255))
 
-bar2 = bar.convert()
+bar2 = pygame.Surface((10,50))
 bar2.fill((255,0,0))
 
-circ_sur = pygame.Surface((15,15))
-circ     = pygame.draw.circle(circ_sur, (0,255,0), (15/2,15/2), 15/2)
-circle   = circ_sur.convert()
+circle = pygame.Surface((15,15))
+pygame.draw.circle(circle, (0,255,0), (15/2,15/2), 15/2)
 circle.set_colorkey((0,0,0))
 
 # some definitions
@@ -47,33 +44,29 @@ circle_x, circle_y           = 307.5, 232.5
 bar1_move, bar2_move         = 0. , 0.
 speed_x, speed_y, speed_circ = 250., 250., 250.
 bar1_score, bar2_score       = 0,0
+pad_speed = 8
+time_sec = 0.01
 
-#clock and font objects
-clock = pygame.time.Clock()
-font = pygame.font.SysFont("calibri", 40)
 
 while True:
-
     for event in pygame.event.get():
-        if event.type == QUIT:
-            exit()
         if event.type == KEYDOWN:
-            if event.key == K_UP:
-                bar1_move = -ai_speed
-            elif event.key == K_DOWN:
-                bar1_move = ai_speed
-            elif event.key == K_q:
-                bar2_move = -ai_speed
+            if event.key == K_q:
+                bar1_move = -pad_speed
             elif event.key == K_w:
-                bar2_move = ai_speed
+                bar1_move = pad_speed
+            elif event.key == K_UP:
+                bar2_move = -pad_speed
+            elif event.key == K_DOWN:
+                bar2_move = pad_speed
         elif event.type == KEYUP:
-            if event.key == K_UP:
+            if event.key == K_q:
                 bar1_move = 0.
-            elif event.key == K_DOWN:
-                bar1_move = 0.
-            elif event.key == K_q:
-                bar2_move = 0.
             elif event.key == K_w:
+                bar1_move = 0.
+            elif event.key == K_UP:
+                bar2_move = 0.
+            elif event.key == K_DOWN:
                 bar2_move = 0.
 
     score1 = font.render(str(bar1_score), True, (255,255,255))
@@ -91,29 +84,20 @@ while True:
     bar1_y += bar1_move
     bar2_y += bar2_move
 
-    # movement of circle
-    time_passed = clock.tick(30)
-    time_sec = time_passed / 1000.0
-
     circle_x += speed_x * time_sec
     circle_y += speed_y * time_sec
-    ai_speed = speed_circ * time_sec
-#AI of the computer.
-    # if circle_x >= 305.:
-    #     if not bar2_y == circle_y + 7.5:
-    #         if bar2_y < circle_y + 7.5:
-    #             bar2_y += ai_speed
-    #         if  bar2_y > circle_y - 42.5:
-    #             bar2_y -= ai_speed
-    #     else:
-    #         bar2_y == circle_y + 7.5
 
-    if bar1_y >= 420.: bar1_y = 420.
-    elif bar1_y <= 10. : bar1_y = 10.
-    if bar2_y >= 420.: bar2_y = 420.
+    # Put bar to center
+    if bar1_y >= 420.: 
+        bar1_y = 420.
+    elif bar1_y <= 10. : 
+        bar1_y = 10.
+    
+    if bar2_y >= 420.: 
+        bar2_y = 420.
     elif bar2_y <= 10.: bar2_y = 10.
 
-    #since i don't know anything about collision, ball hitting bars goes like this.
+    # collision detection
     if circle_x <= bar1_x + 10.:
         if circle_y >= bar1_y - 7.5 and circle_y <= bar1_y + 42.5:
             circle_x = 20.
