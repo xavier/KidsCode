@@ -1,124 +1,143 @@
 #!/usr/bin/env python
-#
-#       This program is free software; you can redistribute it and/or modify
-#       it under the terms of the GNU General Public License as published by
-#       the Free Software Foundation; either version 2 of the License, or
-#       (at your option) any later version.
-#
-#       This program is distributed in the hope that it will be useful,
-#       but WITHOUT ANY WARRANTY; without even the implied warranty of
-#       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#       GNU General Public License for more details.
-#
-#   It's my first actual game-making attempt. I know code could be much better
-#   with classes or defs but I tried to make it short and understandable with very
-#   little knowledge of python and pygame(I'm one of them). Enjoy.
 
 import pygame
 from pygame.locals import *
 
 pygame.init()
 
-font  = pygame.font.SysFont("calibri", 40)
+font            = pygame.font.SysFont("calibri", 40)
+
+blue            = (0,0,255)
+red             = (255,0,0)
+green           = (0,255,0)
+white           = (255,225,255)
+black           = (0,0,0)
+
+bat_center_y    = 215.0
+bat_up_limit    = 10.0
+bat_down_limit  = 420.0
+ball_up_limit   = 10.0
+ball_down_limit = 457.5
+left_limit      = 10.0
+rigth_limit     = 620
+
 
 screen = pygame.display.set_mode((640,480), 0, 32)
 pygame.display.set_caption("Pyng!")
 
-#Creating 2 bars, a ball and background.
-background = pygame.image.load('back.jpg')
+background = pygame.image.load("back.jpg")
 
-bar1 = pygame.Surface((10,50))
-bar1.fill((0,0,255))
+bat_left       = pygame.Surface((10,50))
+bat_left.fill(blue)
+bat_left_x     = left_limit
+bat_left_y     = bat_center_y
+bat_left_move  = 0.0
+bat_left_score = 0
 
-bar2 = pygame.Surface((10,50))
-bar2.fill((255,0,0))
+bat_right       = pygame.Surface((10,50))
+bat_right.fill(red)
+bat_right_x     = rigth_limit
+bat_right_y     = bat_center_y
+bat_right_move  = 0.0
+bat_right_score = 0
 
-circle = pygame.Surface((15,15))
-pygame.draw.circle(circle, (0,255,0), (15/2,15/2), 15/2)
-circle.set_colorkey((0,0,0))
+ball     = pygame.Surface((15,15))
+pygame.draw.circle(ball, green, (15/2,15/2), 15/2)
+ball.set_colorkey(black)
+ball_x   = 307.5
+ball_y   = 232.5
 
-# some definitions
-bar1_x, bar2_x               = 10. , 620.
-bar1_y, bar2_y               = 215. , 215.
-circle_x, circle_y           = 307.5, 232.5
-bar1_move, bar2_move         = 0. , 0.
-speed_x, speed_y, speed_circ = 250., 250., 250.
-bar1_score, bar2_score       = 0,0
-pad_speed = 8
-time_sec = 0.01
+ball_speed_x = 250.0
+ball_speed_y = 250.0
+ball_speed   = 250.0
 
+clock = pygame.time.Clock()
 
 while True:
     for event in pygame.event.get():
+        if event.type == QUIT:
+            exit()
         if event.type == KEYDOWN:
             if event.key == K_q:
-                bar1_move = -pad_speed
-            elif event.key == K_w:
-                bar1_move = pad_speed
+                bat_left_move = -pad_speed
+            elif event.key == K_a:
+                bat_left_move = pad_speed
             elif event.key == K_UP:
-                bar2_move = -pad_speed
+                bat_right_move = -pad_speed
             elif event.key == K_DOWN:
-                bar2_move = pad_speed
+                bat_right_move = pad_speed
         elif event.type == KEYUP:
             if event.key == K_q:
-                bar1_move = 0.
-            elif event.key == K_w:
-                bar1_move = 0.
+                bat_left_move = 0.0
+            elif event.key == K_a:
+                bat_left_move = 0.0
             elif event.key == K_UP:
-                bar2_move = 0.
+                bat_right_move = 0.0
             elif event.key == K_DOWN:
-                bar2_move = 0.
-
-    score1 = font.render(str(bar1_score), True, (255,255,255))
-    score2 = font.render(str(bar2_score), True, (255,255,255))
+                bat_right_move = 0.0
 
     screen.blit(background,  (0,0))
-    frame = pygame.draw.rect(screen, (255,255,255), Rect((5,5), (630,470)), 2)
-    middle_line = pygame.draw.aaline(screen, (255,255,255), (330,5), (330,475))
-    screen.blit(bar1, (bar1_x,bar1_y))
-    screen.blit(bar2, (bar2_x,bar2_y))
-    screen.blit(circle, (circle_x,circle_y))
-    screen.blit(score1, (250.,210.))
-    screen.blit(score2, (380.,210.))
+    frame = pygame.draw.rect(screen, white, Rect((5,5), (630,470)), 2)
+    middle_line = pygame.draw.aaline(screen, white, (330,5), (330,475))
 
-    bar1_y += bar1_move
-    bar2_y += bar2_move
-
-    circle_x += speed_x * time_sec
-    circle_y += speed_y * time_sec
-
-    # Put bar to center
-    if bar1_y >= 420.: 
-        bar1_y = 420.
-    elif bar1_y <= 10. : 
-        bar1_y = 10.
+    score1 = font.render(str(bat_left_score), True, white)
+    score2 = font.render(str(bat_right_score), True, white)
+    screen.blit(score1, (250.0,210.0))
+    screen.blit(score2, (380.0,210.0))
     
-    if bar2_y >= 420.: 
-        bar2_y = 420.
-    elif bar2_y <= 10.: bar2_y = 10.
+    bat_left_y += bat_left_move
+    if bat_left_y >= bat_down_limit: 
+        bat_left_y = bat_down_limit
+    elif bat_left_y <= bat_up_limit : 
+        bat_left_y = bat_up_limit
+    screen.blit(bat_left, (bat_left_x, bat_left_y))
 
-    # collision detection
-    if circle_x <= bar1_x + 10.:
-        if circle_y >= bar1_y - 7.5 and circle_y <= bar1_y + 42.5:
-            circle_x = 20.
-            speed_x = -speed_x
-    if circle_x >= bar2_x - 15.:
-        if circle_y >= bar2_y - 7.5 and circle_y <= bar2_y + 42.5:
-            circle_x = 605.
-            speed_x = -speed_x
-    if circle_x < 5.:
-        bar2_score += 1
-        circle_x, circle_y = 320., 232.5
-        bar1_y,bar_2_y = 215., 215.
-    elif circle_x > 620.:
-        bar1_score += 1
-        circle_x, circle_y = 307.5, 232.5
-        bar1_y, bar2_y = 215., 215.
-    if circle_y <= 10.:
-        speed_y = -speed_y
-        circle_y = 10.
-    elif circle_y >= 457.5:
-        speed_y = -speed_y
-        circle_y = 457.5
+    bat_right_y += bat_right_move
+    if bat_right_y >= bat_down_limit: 
+        bat_right_y = bat_down_limit
+    elif bat_right_y <= bat_up_limit:
+        bat_right_y = bat_up_limit
+    screen.blit(bat_right, (bat_right_x, bat_right_y))
+
+    time_passed  = clock.tick(30)
+    time_sec     = time_passed / 1000.0
+    pad_speed    = ball_speed * time_sec
+
+    ball_x      += ball_speed_x * time_sec
+    ball_y      += ball_speed_y * time_sec
+    screen.blit(ball, (ball_x, ball_y))
+
+    # Bounce on up and down walls
+    if ball_y <= ball_up_limit:
+        ball_speed_y = -ball_speed_y
+        ball_y       = ball_up_limit
+    elif ball_y >= ball_down_limit:
+        ball_speed_y = -ball_speed_y
+        ball_y       = ball_down_limit
+
+    # Bounce on bats
+    if ball_x <= bat_left_x + 10.0:
+        if ball_y >= bat_left_y - 7.5 and ball_y <= bat_left_y + 42.5:
+            ball_x       = 20.0
+            ball_speed_x = -ball_speed_x
+            
+    if ball_x >= bat_right_x - 15.:
+        if ball_y >= bat_right_y - 7.5 and ball_y <= bat_right_y + 42.5:
+            ball_x   = 605.0
+            ball_speed_x  = -ball_speed_x
+
+    # Detect points
+    if ball_x < left_limit:
+        bat_right_score += 1
+        ball_x           = 320.0
+        ball_y           = 232.5
+        bat_left_y       = bat_center_y
+        bat_right_y      = bat_center_y
+    elif ball_x > rigth_limit:
+        bat_left_score  += 1
+        ball_x           = 307.5
+        ball_y           = 232.5
+        bat_left_y       = bat_center_y
+        bat_right_y      = bat_center_y
 
     pygame.display.update()
